@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Converter</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- jsPDF for standard Document PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- pdf.js for reading PDF files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+            <span id="theme-icon">🌙</span>
+        </button>
+        <header>
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <h1>File Converter</h1>
+            </div>
+            <p class="subtitle">Convert Images, Data, Texts & More directly in your browser.</p>
+            <div class="privacy-badge">
+                <span class="lock-icon">🔒</span>
+                <span>100% Client-Side. Files never leave your device.</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="upload-section panel" id="drop-zone">
+                <input type="file" id="file-input" hidden>
+                <div class="upload-content">
+                    <div class="upload-icon">📂</div>
+                    <h3>Drag & Drop files here</h3>
+                    <p>or</p>
+                    <button class="btn primary-btn" onclick="document.getElementById('file-input').click()">Browse Files</button>
+                    <p class="formats-info">Supports JSON, CSV, JPG, PNG, WEBP, TXT, PDF, AUDIO and more...</p>
+                </div>
+            </div>
+
+            <section class="conversions-list panel" id="supported-formats-list">
+                <h3 class="panel-title">What can you convert?</h3>
+                <div class="formats-grid">
+                    <div class="format-card">
+                        <span class="icon">🖼️</span>
+                        <div>
+                            <h4>Images</h4>
+                            <p>JPG, PNG, WEBP, BMP, GIF ↔ JPG, PNG, WEBP, Base64</p>
+                        </div>
+                    </div>
+                    <div class="format-card">
+                        <span class="icon">📄</span>
+                        <div>
+                            <h4>Documents</h4>
+                            <p>TXT, JSON, HTML → PDF, DOC <br/> PDF → TXT (Extract text)</p>
+                        </div>
+                    </div>
+                    <div class="format-card">
+                        <span class="icon">📊</span>
+                        <div>
+                            <h4>Data</h4>
+                            <p>JSON ↔ CSV ↔ TSV ↔ XML</p>
+                        </div>
+                    </div>
+                    <div class="format-card">
+                        <span class="icon">🔊</span>
+                        <div>
+                            <h4>Audio</h4>
+                            <p>MP3, WEBM, OGG, WAV → WAV, Base64</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="conversion-workspace" id="workspace" style="display: none;">
+                <div class="panel">
+                    <div class="file-info-card">
+                        <div class="file-details">
+                            <h3 id="file-name">filename.ext</h3>
+                            <div class="tags">
+                                <span class="tag" id="file-size">0 KB</span>
+                                <span class="tag type-tag" id="file-type">Unknown</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="supported-area" class="conversion-controls">
+                        <div class="control-group">
+                            <label for="format-select">Convert to:</label>
+                            <select id="format-select">
+                                <option value="" disabled selected>Select a format</option>
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+
+                        <!-- Dynamic options (like quality for image) -->
+                        <div id="dynamic-options" class="dynamic-options">
+                            <div class="control-group quality-group" id="quality-wrapper" style="display:none;">
+                                <label for="quality-slider">Quality: <span id="quality-val">90</span>%</label>
+                                <input type="range" id="quality-slider" min="1" max="100" value="90">
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button id="convert-btn" class="btn success-btn" disabled>Convert File</button>
+                            <button id="reset-btn" class="btn outline-btn">Cancel</button>
+                        </div>
+                    </div>
+
+                    <div id="unsupported-area" class="unsupported-message" style="display: none;">
+                        <div class="alert-icon">⚠️</div>
+                        <h4>Format Not Supported for Client-Side Conversion</h4>
+                        <p id="unsupported-reason">This file format cannot be converted purely in the browser. It requires complex server-side processing.</p>
+                        <button class="btn outline-btn mt-3" onclick="document.getElementById('reset-btn').click()">Try Another File</button>
+                    </div>
+                </div>
+
+                <!-- Output Area inside Workspace -->
+                <div class="panel output-panel" id="output-area" style="display: none;">
+                    <h3 class="panel-title">Conversion Result</h3>
+                    <div class="output-card">
+                        <div class="output-icon">✅</div>
+                        <div class="output-details">
+                            <h4 id="out-file-name">result.ext</h4>
+                            <span class="tag" id="out-file-size">0 KB</span>
+                        </div>
+                        <a id="download-link" class="btn primary-btn" download>Download</a>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="history-section panel" id="history-panel" style="display: none;">
+                <h3 class="panel-title">Recent Conversions</h3>
+                <ul id="history-list" class="history-list">
+                    <!-- History items -->
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
